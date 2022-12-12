@@ -16,7 +16,160 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/fs/file/{id}": {
+        "/api/fs/directories/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "directories"
+                ],
+                "summary": "获取目录详细信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "目录id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/directory.GetInfoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fs/directories/{id}/directories": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "directories"
+                ],
+                "summary": "获取指定目录下一层级的目录列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "目录id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/directory.GetDirectoryResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fs/directories/{id}/files": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "directories"
+                ],
+                "summary": "获取指定目录下一层级的文件列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "目录id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/directory.GetFileResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fs/files/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -41,27 +194,66 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/file.GetInfoResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/http.ProblemDetails"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/http.ProblemDetails"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/http.ProblemDetails"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "directory.GetDirectoryResponse": {
+            "type": "object"
+        },
+        "directory.GetFileResponse": {
+            "type": "object"
+        },
+        "directory.GetInfoResponse": {
+            "type": "object"
+        },
+        "file.GetInfoResponse": {
+            "type": "object"
+        },
+        "http.ProblemDetails": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "a error detail"
+                },
+                "instance": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "/api/to/path"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 400
+                },
+                "title": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "a error title"
                 }
             }
         }

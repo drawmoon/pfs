@@ -15,12 +15,19 @@ func main() {
 	server := gin.Default()
 
 	file := controller.NewFileController()
+	directory := controller.NewDirectoryController()
 
 	fs := server.Group("api/fs")
 	{
 		files := fs.Group("files")
 		{
 			files.GET(":id", file.GetInfo)
+		}
+		directories := fs.Group("directories")
+		{
+			directories.GET(":id", directory.GetInfo)
+			directories.GET(":id/files", directory.GetFiles)
+			directories.GET(":id/directories", directory.GetDirectories)
 		}
 	}
 	server.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
