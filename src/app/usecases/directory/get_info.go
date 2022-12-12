@@ -1,4 +1,4 @@
 package directory
 
-type GetInfoResponse struct {
+type GetInfoCaseRes struct {
 }

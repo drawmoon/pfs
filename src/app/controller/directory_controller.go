@@ -22,7 +22,7 @@ func NewDirectoryController() *DirectoryController {
 // @Accept		json
 // @Produce		json
 // @Param		id		path		int		true		"目录id"
-// @Success		200		{object}		directory.GetInfoResponse
+// @Success		200		{object}		directory.GetInfoCaseRes
 // @Failure		400		{object}		http.ProblemDetails
 // @Failure		404		{object}		http.ProblemDetails
 // @Failure		500		{object}		http.ProblemDetails
@@ -42,7 +42,7 @@ func (c *DirectoryController) GetInfo(ctx *gin.Context) {
 // @Accept		json
 // @Produce		json
 // @Param		id		path		int		true		"目录id"
-// @Success		200		{object}		directory.GetDirectoriesResponse
+// @Success		200		{object}		directory.GetDirectoriesCaseRes
 // @Failure		400		{object}		http.ProblemDetails
 // @Failure		404		{object}		http.ProblemDetails
 // @Failure		500		{object}		http.ProblemDetails
@@ -66,7 +66,7 @@ func (c *DirectoryController) GetDirectories(ctx *gin.Context) {
 // @Accept		json
 // @Produce		json
 // @Param		id		path		int		true		"目录id"
-// @Success		200		{object}		directory.GetFilesResponse
+// @Success		200		{object}		directory.GetFilesCaseRes
 // @Failure		400		{object}		http.ProblemDetails
 // @Failure		404		{object}		http.ProblemDetails
 // @Failure		500		{object}		http.ProblemDetails

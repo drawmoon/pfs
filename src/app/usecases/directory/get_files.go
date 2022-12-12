@@ -1,6 +1,4 @@
 package directory
 
-type GetFilesResponse = []GetFileResponse
-
-type GetFileResponse struct {
+type GetFilesCaseRes struct {
 }

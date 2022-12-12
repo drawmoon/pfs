@@ -41,7 +41,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/directory.GetInfoResponse"
+                            "$ref": "#/definitions/directory.GetInfoCaseRes"
                         }
                     },
                     "400": {
@@ -90,10 +90,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/directory.GetDirectoryResponse"
-                            }
+                            "$ref": "#/definitions/directory.GetDirectoriesCaseRes"
                         }
                     },
                     "400": {
@@ -142,10 +139,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/directory.GetFileResponse"
-                            }
+                            "$ref": "#/definitions/directory.GetFilesCaseRes"
                         }
                     },
                     "400": {
@@ -194,7 +188,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/file.GetInfoResponse"
+                            "$ref": "#/definitions/file.GetInfoCaseRes"
                         }
                     },
                     "400": {
@@ -220,16 +214,58 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "directory.GetDirectoryResponse": {
+        "directory.GetDirectoriesCaseRes": {
+            "type": "object",
+            "properties": {
+                "hasNextPages": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
+                "hasPrevPages": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "format": "[]GetDirectoryCaseRes",
+                        "$ref": "#/definitions/directory.GetDirectoryCaseRes"
+                    }
+                },
+                "pageIndex": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 1
+                },
+                "pageSize": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 10
+                },
+                "totalCount": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 50
+                },
+                "totalPages": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 5
+                }
+            }
+        },
+        "directory.GetDirectoryCaseRes": {
             "type": "object"
         },
-        "directory.GetFileResponse": {
+        "directory.GetFilesCaseRes": {
             "type": "object"
         },
-        "directory.GetInfoResponse": {
+        "directory.GetInfoCaseRes": {
             "type": "object"
         },
-        "file.GetInfoResponse": {
+        "file.GetInfoCaseRes": {
             "type": "object"
         },
         "http.ProblemDetails": {

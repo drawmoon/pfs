@@ -1,11 +1,43 @@
 definitions:
-  directory.GetDirectoryResponse:
+  directory.GetDirectoriesCaseRes:
+    properties:
+      hasNextPages:
+        example: true
+        format: bool
+        type: boolean
+      hasPrevPages:
+        example: true
+        format: bool
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/directory.GetDirectoryCaseRes'
+          format: '[]GetDirectoryCaseRes'
+        type: array
+      pageIndex:
+        example: 1
+        format: int
+        type: integer
+      pageSize:
+        example: 10
+        format: int
+        type: integer
+      totalCount:
+        example: 50
+        format: int
+        type: integer
+      totalPages:
+        example: 5
+        format: int
+        type: integer
     type: object
-  directory.GetFileResponse:
+  directory.GetDirectoryCaseRes:
     type: object
-  directory.GetInfoResponse:
+  directory.GetFilesCaseRes:
     type: object
-  file.GetInfoResponse:
+  directory.GetInfoCaseRes:
+    type: object
+  file.GetInfoCaseRes:
     type: object
   http.ProblemDetails:
     properties:
@@ -48,7 +80,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/directory.GetInfoResponse'
+            $ref: '#/definitions/directory.GetInfoCaseRes'
         "400":
           description: Bad Request
           schema:
@@ -80,9 +112,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/directory.GetDirectoryResponse'
-            type: array
+            $ref: '#/definitions/directory.GetDirectoriesCaseRes'
         "400":
           description: Bad Request
           schema:
@@ -114,9 +144,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/directory.GetFileResponse'
-            type: array
+            $ref: '#/definitions/directory.GetFilesCaseRes'
         "400":
           description: Bad Request
           schema:
@@ -148,7 +176,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/file.GetInfoResponse'
+            $ref: '#/definitions/file.GetInfoCaseRes'
         "400":
           description: Bad Request
           schema:

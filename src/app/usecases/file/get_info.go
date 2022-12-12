@@ -1,4 +1,4 @@
 package file
 
-type GetInfoResponse struct {
+type GetInfoCaseRes struct {
 }

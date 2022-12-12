@@ -22,7 +22,7 @@ func NewFileController() *FileController {
 // @Accept		json
 // @Produce		json
 // @Param		id		path		int		true		"文件id"
-// @Success		200		{object}		file.GetInfoResponse
+// @Success		200		{object}		file.GetInfoCaseRes
 // @Failure		400		{object}		http.ProblemDetails
 // @Failure		404		{object}		http.ProblemDetails
 // @Failure		500		{object}		http.ProblemDetails
