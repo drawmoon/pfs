@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/fs/directories/{id}": {
+        "/api/fs/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -25,13 +25,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "directories"
+                    "fs"
                 ],
-                "summary": "获取目录详细信息",
+                "summary": "获取文件或目录的详细信息",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "目录id",
+                        "description": "文件id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -41,31 +41,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/directory.GetInfoCaseRes"
+                            "$ref": "#/definitions/mixin.GetInfoCaseRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     }
                 }
             }
         },
-        "/api/fs/directories/{id}/directories": {
+        "/api/fs/{id}/directories": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -74,7 +74,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "directories"
+                    "fs"
                 ],
                 "summary": "获取指定目录下一层级的目录列表",
                 "parameters": [
@@ -90,31 +90,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/directory.GetDirectoriesCaseRes"
+                            "$ref": "#/definitions/mixin.GetDirectoriesCaseRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     }
                 }
             }
         },
-        "/api/fs/directories/{id}/files": {
+        "/api/fs/{id}/files": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -123,7 +123,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "directories"
+                    "fs"
                 ],
                 "summary": "获取指定目录下一层级的文件列表",
                 "parameters": [
@@ -139,74 +139,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/directory.GetFilesCaseRes"
+                            "$ref": "#/definitions/mixin.GetFilesCaseRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/fs/files/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "files"
-                ],
-                "summary": "获取文件详细信息",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "文件id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/file.GetInfoCaseRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/http.ProblemDetails"
+                            "$ref": "#/definitions/woosh.ProblemDetails"
                         }
                     }
                 }
@@ -214,7 +165,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "directory.GetDirectoriesCaseRes": {
+        "mixin.GetDirectoriesCaseRes": {
             "type": "object",
             "properties": {
                 "hasNextPages": {
@@ -231,7 +182,7 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "format": "[]GetDirectoryCaseRes",
-                        "$ref": "#/definitions/directory.GetDirectoryCaseRes"
+                        "$ref": "#/definitions/mixin.GetDirectoryCaseRes"
                     }
                 },
                 "pageIndex": {
@@ -256,19 +207,33 @@ const docTemplate = `{
                 }
             }
         },
-        "directory.GetDirectoryCaseRes": {
+        "mixin.GetDirectoryCaseRes": {
             "type": "object"
         },
-        "directory.GetFilesCaseRes": {
+        "mixin.GetFilesCaseRes": {
             "type": "object"
         },
-        "directory.GetInfoCaseRes": {
-            "type": "object"
+        "mixin.GetInfoCaseRes": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "uint64",
+                    "example": 1
+                },
+                "isDirectory": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "a new dir"
+                }
+            }
         },
-        "file.GetInfoCaseRes": {
-            "type": "object"
-        },
-        "http.ProblemDetails": {
+        "woosh.ProblemDetails": {
             "type": "object",
             "properties": {
                 "detail": {

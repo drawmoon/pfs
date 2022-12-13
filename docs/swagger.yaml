@@ -1,5 +1,5 @@
 definitions:
-  directory.GetDirectoriesCaseRes:
+  mixin.GetDirectoriesCaseRes:
     properties:
       hasNextPages:
         example: true
@@ -11,7 +11,7 @@ definitions:
         type: boolean
       items:
         items:
-          $ref: '#/definitions/directory.GetDirectoryCaseRes'
+          $ref: '#/definitions/mixin.GetDirectoryCaseRes'
           format: '[]GetDirectoryCaseRes'
         type: array
       pageIndex:
@@ -31,15 +31,26 @@ definitions:
         format: int
         type: integer
     type: object
-  directory.GetDirectoryCaseRes:
+  mixin.GetDirectoryCaseRes:
     type: object
-  directory.GetFilesCaseRes:
+  mixin.GetFilesCaseRes:
     type: object
-  directory.GetInfoCaseRes:
+  mixin.GetInfoCaseRes:
+    properties:
+      id:
+        example: 1
+        format: uint64
+        type: integer
+      isDirectory:
+        example: true
+        format: bool
+        type: boolean
+      name:
+        example: a new dir
+        format: string
+        type: string
     type: object
-  file.GetInfoCaseRes:
-    type: object
-  http.ProblemDetails:
+  woosh.ProblemDetails:
     properties:
       detail:
         example: a error detail
@@ -64,103 +75,7 @@ info:
   title: Power File Storage API
   version: "1.0"
 paths:
-  /api/fs/directories/{id}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 目录id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/directory.GetInfoCaseRes'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-      summary: 获取目录详细信息
-      tags:
-      - directories
-  /api/fs/directories/{id}/directories:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 目录id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/directory.GetDirectoriesCaseRes'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-      summary: 获取指定目录下一层级的目录列表
-      tags:
-      - directories
-  /api/fs/directories/{id}/files:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 目录id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/directory.GetFilesCaseRes'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/http.ProblemDetails'
-      summary: 获取指定目录下一层级的文件列表
-      tags:
-      - directories
-  /api/fs/files/{id}:
+  /api/fs/{id}:
     get:
       consumes:
       - application/json
@@ -176,20 +91,84 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/file.GetInfoCaseRes'
+            $ref: '#/definitions/mixin.GetInfoCaseRes'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/http.ProblemDetails'
+            $ref: '#/definitions/woosh.ProblemDetails'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/http.ProblemDetails'
+            $ref: '#/definitions/woosh.ProblemDetails'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/http.ProblemDetails'
-      summary: 获取文件详细信息
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 获取文件或目录的详细信息
       tags:
-      - files
+      - fs
+  /api/fs/{id}/directories:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 目录id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.GetDirectoriesCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 获取指定目录下一层级的目录列表
+      tags:
+      - fs
+  /api/fs/{id}/files:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 目录id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.GetFilesCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 获取指定目录下一层级的文件列表
+      tags:
+      - fs
 swagger: "2.0"

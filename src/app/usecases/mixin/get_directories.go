@@ -1,4 +1,4 @@
-package directory
+package mixin
 
 type GetDirectoryCaseRes struct {
 }

@@ -1,4 +1,4 @@
-package http
+package woosh
 
 import (
 	"net/http"
