@@ -1,4 +1,8 @@
 definitions:
+  mixin.CreateCaseRes:
+    type: object
+  mixin.DeleteCaseRes:
+    type: object
   mixin.GetDirectoriesCaseRes:
     properties:
       hasNextPages:
@@ -33,8 +37,6 @@ definitions:
     type: object
   mixin.GetDirectoryCaseRes:
     type: object
-  mixin.GetFilesCaseRes:
-    type: object
   mixin.GetInfoCaseRes:
     properties:
       id:
@@ -49,6 +51,10 @@ definitions:
         example: a new dir
         format: string
         type: string
+    type: object
+  mixin.MoveCaseRes:
+    type: object
+  mixin.RenameCaseRes:
     type: object
   woosh.ProblemDetails:
     properties:
@@ -75,12 +81,63 @@ info:
   title: Power File Storage API
   version: "1.0"
 paths:
+  /api/fs:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.DeleteCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 移除文件或目录
+      tags:
+      - fs
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.CreateCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 创建文件或目录
+      tags:
+      - fs
   /api/fs/{id}:
     get:
       consumes:
       - application/json
       parameters:
-      - description: 文件id
+      - description: 操作id
         in: path
         name: id
         required: true
@@ -112,10 +169,22 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 目录id
+      - description: 操作id
         in: path
         name: id
         required: true
+        type: integer
+      - description: 搜索
+        in: query
+        name: search
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 页的大小
+        in: query
+        name: pageSize
         type: integer
       produces:
       - application/json
@@ -144,10 +213,22 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 目录id
+      - description: 操作id
         in: path
         name: id
         required: true
+        type: integer
+      - description: 搜索
+        in: query
+        name: search
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 页的大小
+        in: query
+        name: pageSize
         type: integer
       produces:
       - application/json
@@ -155,7 +236,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/mixin.GetFilesCaseRes'
+            $ref: '#/definitions/mixin.GetDirectoriesCaseRes'
         "400":
           description: Bad Request
           schema:
@@ -169,6 +250,58 @@ paths:
           schema:
             $ref: '#/definitions/woosh.ProblemDetails'
       summary: 获取指定目录下一层级的文件列表
+      tags:
+      - fs
+  /api/fs/move:
+    put:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.MoveCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 移动文件或目录
+      tags:
+      - fs
+  /api/fs/rename:
+    put:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mixin.RenameCaseRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/woosh.ProblemDetails'
+      summary: 重命名文件或目录
       tags:
       - fs
 swagger: "2.0"

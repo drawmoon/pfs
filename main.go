@@ -21,6 +21,10 @@ func main() {
 		fs.GET(":id", mixin.GetInfo)
 		fs.GET(":id/files", mixin.GetFiles)
 		fs.GET(":id/directories", mixin.GetDirectories)
+		fs.POST("", mixin.Create)
+		fs.PUT("rename", mixin.Rename)
+		fs.PUT("move", mixin.Move)
+		fs.DELETE("", mixin.Delete)
 	}
 	server.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
 	server.Run(":3000")

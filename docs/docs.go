@@ -16,6 +16,164 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/fs": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fs"
+                ],
+                "summary": "创建文件或目录",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/mixin.CreateCaseRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fs"
+                ],
+                "summary": "移除文件或目录",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/mixin.DeleteCaseRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fs/move": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fs"
+                ],
+                "summary": "移动文件或目录",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/mixin.MoveCaseRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fs/rename": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fs"
+                ],
+                "summary": "重命名文件或目录",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/mixin.RenameCaseRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/woosh.ProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
         "/api/fs/{id}": {
             "get": {
                 "consumes": [
@@ -31,7 +189,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "文件id",
+                        "description": "操作id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -80,10 +238,28 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "目录id",
+                        "description": "操作id",
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "搜索",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页的大小",
+                        "name": "pageSize",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -129,17 +305,35 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "目录id",
+                        "description": "操作id",
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "搜索",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页的大小",
+                        "name": "pageSize",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/mixin.GetFilesCaseRes"
+                            "$ref": "#/definitions/mixin.GetDirectoriesCaseRes"
                         }
                     },
                     "400": {
@@ -165,6 +359,12 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "mixin.CreateCaseRes": {
+            "type": "object"
+        },
+        "mixin.DeleteCaseRes": {
+            "type": "object"
+        },
         "mixin.GetDirectoriesCaseRes": {
             "type": "object",
             "properties": {
@@ -210,9 +410,6 @@ const docTemplate = `{
         "mixin.GetDirectoryCaseRes": {
             "type": "object"
         },
-        "mixin.GetFilesCaseRes": {
-            "type": "object"
-        },
         "mixin.GetInfoCaseRes": {
             "type": "object",
             "properties": {
@@ -232,6 +429,12 @@ const docTemplate = `{
                     "example": "a new dir"
                 }
             }
+        },
+        "mixin.MoveCaseRes": {
+            "type": "object"
+        },
+        "mixin.RenameCaseRes": {
+            "type": "object"
         },
         "woosh.ProblemDetails": {
             "type": "object",
