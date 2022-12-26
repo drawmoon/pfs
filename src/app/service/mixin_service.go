@@ -5,10 +5,11 @@ import (
 	ds "github.com/PowerReport/pfs/src/domain/directory/service"
 	fs "github.com/PowerReport/pfs/src/domain/file/service"
 	"github.com/PowerReport/pfs/src/util/identity"
+	"github.com/jinzhu/copier"
 )
 
 type IMixinService interface {
-	GetInfo(identity.OpId) mixin.GetInfoCaseRes
+	GetInfo(identity.OpId) (mixin.GetInfoCaseRes, error)
 	GetDirectories(identity.OpId, string, int64, int64) mixin.GetDirectoriesCaseRes
 	GetFiles(identity.OpId, string, int64, int64) mixin.GetFilesCaseRes
 	Create(mixin.CreateCaseReq) mixin.CreateCaseRes
@@ -22,22 +23,26 @@ type MixinService struct {
 	directoryService ds.IDirectoryService
 }
 
-func (svc *MixinService) GetInfo(id identity.OpId) mixin.GetInfoCaseRes {
+func (svc *MixinService) GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error) {
 	if id.IsDirectory {
-		directory := svc.directoryService.GetInfo(id.Real)
-		return mixin.GetInfoCaseRes{
-			Id:          directory.Id,
-			Name:        directory.Name,
-			IsDirectory: true,
+		directory, err := svc.directoryService.GetInfo(id.Real)
+		if err != nil {
+			return mixin.GetInfoCaseRes{}, err
 		}
+
+		res := mixin.GetInfoCaseRes{IsDirectory: true}
+		copier.Copy(&res, &directory)
+		return res, nil
 	}
 
-	file := svc.fileService.GetInfo(id.Real)
-	return mixin.GetInfoCaseRes{
-		Id:          file.Id,
-		Name:        file.Name,
-		IsDirectory: false,
+	file, err := svc.fileService.GetInfo(id.Real)
+	if err != nil {
+		return mixin.GetInfoCaseRes{}, err
 	}
+
+	res := mixin.GetInfoCaseRes{IsDirectory: false}
+	copier.Copy(&res, &file)
+	return res, nil
 }
 
 func (svc *MixinService) GetDirectories(

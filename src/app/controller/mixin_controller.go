@@ -36,7 +36,12 @@ func (c *MixinController) GetInfo(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, c.mixinService.GetInfo(id))
+	info, err := c.mixinService.GetInfo(id)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+	}
+
+	ctx.JSON(http.StatusOK, info)
 }
 
 // @Summary		获取指定目录下一层级的目录列表

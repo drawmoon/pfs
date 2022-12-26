@@ -1,9 +1,12 @@
 package service
 
-import "github.com/PowerReport/pfs/src/domain/file/model"
+import (
+	"github.com/PowerReport/pfs/src/domain/file/model"
+	"github.com/PowerReport/pfs/src/domain/file/repository"
+)
 
 type IFileService interface {
-	GetInfo(uint64) model.File
+	GetInfo(uint64) (model.File, error)
 	GetRootFiles() []model.File
 	GetByDirectoryId(uint64, string, int64, int64) []model.File
 	Create(string, uint64) model.File
@@ -13,11 +16,11 @@ type IFileService interface {
 }
 
 type FileService struct {
+	fileRepository repository.IFileRepository
 }
 
-func (svc *FileService) GetInfo(id uint64) model.File {
-	file := model.File{}
-	return file
+func (svc *FileService) GetInfo(id uint64) (model.File, error) {
+	return svc.fileRepository.Get(id)
 }
 
 func (svc *FileService) GetRootFiles() []model.File {

@@ -1,9 +1,12 @@
 package service
 
-import "github.com/PowerReport/pfs/src/domain/directory/model"
+import (
+	"github.com/PowerReport/pfs/src/domain/directory/model"
+	"github.com/PowerReport/pfs/src/domain/directory/repository"
+)
 
 type IDirectoryService interface {
-	GetInfo(uint64) model.Directory
+	GetInfo(uint64) (model.Directory, error)
 	GetRootDirectories() []model.Directory
 	GetChildren(uint64, string, int64, int64) []model.Directory
 	Create(string, uint64) model.Directory
@@ -13,11 +16,11 @@ type IDirectoryService interface {
 }
 
 type DirectoryService struct {
+	directoryRepository repository.IDirectoryRepository
 }
 
-func (svc *DirectoryService) GetInfo(id uint64) model.Directory {
-	directory := model.Directory{}
-	return directory
+func (svc *DirectoryService) GetInfo(id uint64) (model.Directory, error) {
+	return svc.directoryRepository.Get(id)
 }
 
 func (svc *DirectoryService) GetRootDirectories() []model.Directory {
