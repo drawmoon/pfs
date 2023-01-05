@@ -11,6 +11,6 @@ type IDirectoryRepository interface {
 	GetAll() ([]model.Directory, error)
 	Save(model.Directory) (model.Directory, error)
 	Update(model.Directory) (model.Directory, error)
-	Delete(uint64) (model.Directory, error)
-	SoftDelete(uint64) (model.Directory, error)
+	Delete(model.Directory) (model.Directory, error)
+	SoftDelete(model.Directory) (model.Directory, error)
 }

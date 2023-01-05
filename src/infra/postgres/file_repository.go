@@ -64,19 +64,8 @@ func (repo *FileRepository) Update(file model.File) (model.File, error) {
 	return file, nil
 }
 
-func (repo *FileRepository) Delete(id uint64) (model.File, error) {
-	db, err := repo.UserViewed()
-	if err != nil {
-		return model.File{}, err
-	}
-
-	var file model.File
-	err = db.First(&file, id).Error
-	if err != nil {
-		return model.File{}, err
-	}
-
-	err = db.Delete(&file).Error
+func (repo *FileRepository) Delete(file model.File) (model.File, error) {
+	err := repo.db.Delete(&file).Error
 	if err != nil {
 		return model.File{}, err
 	}
@@ -84,20 +73,9 @@ func (repo *FileRepository) Delete(id uint64) (model.File, error) {
 	return file, nil
 }
 
-func (repo *FileRepository) SoftDelete(id uint64) (model.File, error) {
-	db, err := repo.UserViewed()
-	if err != nil {
-		return model.File{}, err
-	}
-
-	var file model.File
-	err = db.First(&file, id).Error
-	if err != nil {
-		return model.File{}, err
-	}
-
+func (repo *FileRepository) SoftDelete(file model.File) (model.File, error) {
 	file.DataState = 1
-	err = db.Save(&file).Error
+	err := repo.db.Save(&file).Error
 	if err != nil {
 		return model.File{}, err
 	}

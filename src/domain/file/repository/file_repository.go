@@ -11,6 +11,6 @@ type IFileRepository interface {
 	GetAll() ([]model.File, error)
 	Save(model.File) (model.File, error)
 	Update(model.File) (model.File, error)
-	Delete(uint64) (model.File, error)
-	SoftDelete(uint64) (model.File, error)
+	Delete(model.File) (model.File, error)
+	SoftDelete(model.File) (model.File, error)
 }

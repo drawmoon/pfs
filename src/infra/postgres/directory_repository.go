@@ -64,19 +64,8 @@ func (repo *DirectoryRepository) Update(directory model.Directory) (model.Direct
 	return directory, nil
 }
 
-func (repo *DirectoryRepository) Delete(id uint64) (model.Directory, error) {
-	db, err := repo.UserViewed()
-	if err != nil {
-		return model.Directory{}, err
-	}
-
-	var directory model.Directory
-	err = db.First(&directory, id).Error
-	if err != nil {
-		return model.Directory{}, err
-	}
-
-	err = db.Delete(&directory).Error
+func (repo *DirectoryRepository) Delete(directory model.Directory) (model.Directory, error) {
+	err := repo.db.Delete(&directory).Error
 	if err != nil {
 		return model.Directory{}, err
 	}
@@ -84,20 +73,9 @@ func (repo *DirectoryRepository) Delete(id uint64) (model.Directory, error) {
 	return directory, nil
 }
 
-func (repo *DirectoryRepository) SoftDelete(id uint64) (model.Directory, error) {
-	db, err := repo.UserViewed()
-	if err != nil {
-		return model.Directory{}, err
-	}
-
-	var directory model.Directory
-	err = db.First(&directory, id).Error
-	if err != nil {
-		return model.Directory{}, err
-	}
-
+func (repo *DirectoryRepository) SoftDelete(directory model.Directory) (model.Directory, error) {
 	directory.DataState = 1
-	err = db.Save(&directory).Error
+	err := repo.db.Save(&directory).Error
 	if err != nil {
 		return model.Directory{}, err
 	}
