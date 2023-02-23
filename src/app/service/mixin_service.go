@@ -23,6 +23,16 @@ type MixinService struct {
 	directoryService ds.IDirectoryService
 }
 
+func NewMixinService(
+	fileService fs.IFileService, directoryService ds.IDirectoryService) *MixinService {
+	return &MixinService{
+		fileService:      fileService,
+		directoryService: directoryService,
+	}
+}
+
+var _ IMixinService = &MixinService{}
+
 func (svc *MixinService) GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error) {
 	if id.IsDirectory {
 		directory, err := svc.directoryService.GetInfo(id.Real)

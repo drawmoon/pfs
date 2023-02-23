@@ -8,7 +8,7 @@ import (
 type IFileService interface {
 	GetInfo(uint64) (model.File, error)
 	GetRootFiles() []model.File
-	GetByDirectoryId(uint64, string, int64, int64) []model.File
+	GetByDirectoryId(uint64, string, uint64, uint64) []model.File
 	Create(string, uint64) model.File
 	Rename(uint64, string) model.File
 	Move(uint64, uint64) model.File
@@ -17,6 +17,10 @@ type IFileService interface {
 
 type FileService struct {
 	fileRepository repository.IFileRepository
+}
+
+func NewFileService(fileRepository repository.IFileRepository) *FileService {
+	return &FileService{fileRepository: fileRepository}
 }
 
 func (svc *FileService) GetInfo(id uint64) (model.File, error) {

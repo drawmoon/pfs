@@ -15,8 +15,8 @@ type MixinController struct {
 	mixinService service.IMixinService
 }
 
-func NewMixinController() *MixinController {
-	return &MixinController{}
+func NewMixinController(mixinService service.IMixinService) *MixinController {
+	return &MixinController{mixinService: mixinService}
 }
 
 // @Summary		获取文件或目录的详细信息

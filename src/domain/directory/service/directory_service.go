@@ -21,6 +21,10 @@ type DirectoryService struct {
 	directoryRepository repository.IDirectoryRepository
 }
 
+func NewDirectoryService(directoryRepository repository.IDirectoryRepository) *DirectoryService {
+	return &DirectoryService{directoryRepository: directoryRepository}
+}
+
 func (svc *DirectoryService) GetInfo(id uint64) (model.Directory, error) {
 	return svc.directoryRepository.Get(id)
 }
