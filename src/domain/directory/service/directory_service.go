@@ -52,7 +52,7 @@ func (svc *DirectoryService) GetChildren(
 	}
 
 	directories := []model.Directory{}
-	err = db.Where(&model.Directory{DirectoryId: id}).Find(&directories).Error
+	err = db.Where("DirectoryId = ? AND Name LIKE ?", id, search).Find(&directories).Error
 	if err != nil {
 		return []model.Directory{}, err
 	}

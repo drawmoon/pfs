@@ -8,7 +8,7 @@ import (
 type IFileService interface {
 	GetInfo(uint64) (model.File, error)
 	GetRootFiles() []model.File
-	GetByDirectoryId(uint64, string, uint64, uint64) []model.File
+	GetByDirectoryId(uint64, string, int64, int64) []model.File
 	Create(string, uint64) model.File
 	Rename(uint64, string) model.File
 	Move(uint64, uint64) model.File
@@ -33,7 +33,7 @@ func (svc *FileService) GetRootFiles() []model.File {
 }
 
 func (svc *FileService) GetByDirectoryId(
-	directoryId uint64, search string, page uint64, pageSize uint64) []model.File {
+	directoryId uint64, search string, page int64, pageSize int64) []model.File {
 	files := []model.File{}
 	return files
 }
