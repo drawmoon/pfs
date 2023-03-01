@@ -8,14 +8,22 @@ import (
 	"github.com/jinzhu/copier"
 )
 
+// 混合服务（不区分目录或文件的管理服务）
 type IMixinService interface {
-	GetInfo(identity.OpId) (mixin.GetInfoCaseRes, error)
-	GetDirectories(identity.OpId, string, int64, int64) mixin.GetDirectoriesCaseRes
-	GetFiles(identity.OpId, string, int64, int64) mixin.GetFilesCaseRes
-	Create(mixin.CreateCaseReq) mixin.CreateCaseRes
-	Rename(mixin.RenameCaseReq) mixin.RenameCaseRes
-	Move(mixin.MoveCaseReq) mixin.MoveCaseRes
-	Delete(mixin.DeleteCaseReq) mixin.DeleteCaseRes
+	// 获取目录或文件的详细信息
+	GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error)
+	// 获取指定目录下的目录列表
+	GetDirectories(id identity.OpId, search string, page int64, pageSize int64) mixin.GetDirectoriesCaseRes
+	// 获取指定目录下的文件列表
+	GetFiles(id identity.OpId, search string, page int64, pageSize int64) mixin.GetFilesCaseRes
+	// 创建目录或文件
+	Create(req mixin.CreateCaseReq) mixin.CreateCaseRes
+	// 重命名目录或文件
+	Rename(req mixin.RenameCaseReq) mixin.RenameCaseRes
+	// 移动目录或文件
+	Move(req mixin.MoveCaseReq) mixin.MoveCaseRes
+	// 删除目录或文件
+	Delete(req mixin.DeleteCaseReq) mixin.DeleteCaseRes
 }
 
 type MixinService struct {

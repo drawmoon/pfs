@@ -14,6 +14,10 @@ func NewFileRepository(db *gorm.DB) *FileRepository {
 	return &FileRepository{db: db}
 }
 
+func (repo *FileRepository) CurrentDbContext() *gorm.DB {
+	return repo.db
+}
+
 func (repo *FileRepository) UserViewed() (*gorm.DB, error) {
 	current, err := user.Current()
 	if err != nil {

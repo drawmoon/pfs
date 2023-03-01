@@ -3,18 +3,28 @@ package service
 import (
 	"github.com/PowerReport/pfs/src/domain/directory/model"
 	"github.com/PowerReport/pfs/src/domain/directory/repository"
+	"github.com/PowerReport/pfs/src/domain/directory/validator"
+	"github.com/PowerReport/pfs/src/util/dbaccessor"
 	"github.com/PowerReport/pfs/src/util/user"
 	"gorm.io/gorm"
 )
 
+// 目录管理服务
 type IDirectoryService interface {
-	GetInfo(uint64) (model.Directory, error)
+	// 获取目录详细信息
+	GetInfo(id uint64) (model.Directory, error)
+	// 获取所有根目录列表
 	GetRootDirectories() ([]model.Directory, error)
-	GetChildren(uint64, string, int64, int64) ([]model.Directory, error)
-	Create(string, uint64) (model.Directory, error)
-	Rename(uint64, string) (model.Directory, error)
-	Move(uint64, uint64) (model.Directory, error)
-	Delete(uint64) (model.Directory, error)
+	// 获取子级目录列表
+	GetChildren(id uint64, search string, page int64, pageSize int64) ([]model.Directory, error)
+	// 创建新的目录
+	Create(name string, directoryId uint64) (model.Directory, error)
+	// 重命名目录
+	Rename(id uint64, name string) (model.Directory, error)
+	// 移动目录
+	Move(id uint64, directoryId uint64) (model.Directory, error)
+	// 删除目录
+	Delete(id uint64) (model.Directory, error)
 }
 
 type DirectoryService struct {
@@ -51,8 +61,11 @@ func (svc *DirectoryService) GetChildren(
 		return []model.Directory{}, err
 	}
 
+	// 设置分页
+	db.Scopes(dbaccessor.Paginate(int(page), int(pageSize)))
+
 	directories := []model.Directory{}
-	err = db.Where("DirectoryId = ? AND Name LIKE ?", id, search).Find(&directories).Error
+	err = db.Where("DirectoryId = ? AND Name LIKE %?%", id, search).Find(&directories).Error
 	if err != nil {
 		return []model.Directory{}, err
 	}
@@ -73,6 +86,9 @@ func (svc *DirectoryService) Create(name string, directoryId uint64) (model.Dire
 		DataState:   0,
 	}
 
+	// 校验目录添加是否合法
+	validator.ValidateForAdding(&directory)
+
 	directory, err = svc.directoryRepository.Save(directory)
 	if err != nil {
 		return model.Directory{}, err
@@ -88,6 +104,9 @@ func (svc *DirectoryService) Rename(id uint64, name string) (model.Directory, er
 	}
 
 	directory.Name = name
+	// 校验目录名称是否合法
+	validator.ValidateName(&directory)
+
 	directory, err = svc.directoryRepository.Update(directory)
 	if err != nil {
 		return model.Directory{}, err
@@ -103,6 +122,9 @@ func (svc *DirectoryService) Move(id uint64, directoryId uint64) (model.Director
 	}
 
 	directory.DirectoryId = directoryId
+	// 校验目录移动是否合法
+	validator.ValidateForMove(&directory)
+
 	directory, err = svc.directoryRepository.Update(directory)
 	if err != nil {
 		return model.Directory{}, err
@@ -116,6 +138,9 @@ func (svc *DirectoryService) Delete(id uint64) (model.Directory, error) {
 	if err != nil {
 		return model.Directory{}, err
 	}
+
+	// 校验目录删除是否合法
+	validator.ValidatePermissionForDeleting(&directory)
 
 	directory, err = svc.directoryRepository.Delete(directory)
 	if err != nil {
