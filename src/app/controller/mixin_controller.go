@@ -59,7 +59,7 @@ func (c *MixinController) GetInfo(ctx *gin.Context) {
 // @Router		/api/fs/{id}/directories		[get]
 func (c *MixinController) GetDirectories(ctx *gin.Context) {
 	id, err := identity.ParseOpId(ctx.Param("id"))
-	if err != nil || !id.IsDirectory {
+	if err != nil || !id.IsDir {
 		woosh.HandleException("操作id错误", ctx)
 		return
 	}
@@ -68,7 +68,13 @@ func (c *MixinController) GetDirectories(ctx *gin.Context) {
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
-	ctx.JSON(http.StatusOK, c.mixinService.GetDirectories(id, search, page, pageSize))
+	res, err := c.mixinService.GetDirectories(id, search, page, pageSize)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // @Summary		获取指定目录下一层级的文件列表
@@ -86,7 +92,7 @@ func (c *MixinController) GetDirectories(ctx *gin.Context) {
 // @Router		/api/fs/{id}/files		[get]
 func (c *MixinController) GetFiles(ctx *gin.Context) {
 	id, err := identity.ParseOpId(ctx.Param("id"))
-	if err != nil || !id.IsDirectory {
+	if err != nil || !id.IsDir {
 		woosh.HandleException("操作id错误", ctx)
 		return
 	}
@@ -95,7 +101,13 @@ func (c *MixinController) GetFiles(ctx *gin.Context) {
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
-	ctx.JSON(http.StatusOK, c.mixinService.GetFiles(id, search, page, pageSize))
+	res, err := c.mixinService.GetFiles(id, search, page, pageSize)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // @Summary		创建文件或目录
@@ -110,7 +122,13 @@ func (c *MixinController) GetFiles(ctx *gin.Context) {
 func (c *MixinController) Create(ctx *gin.Context) {
 	req := mixin.CreateCaseReq{}
 
-	ctx.JSON(http.StatusOK, c.mixinService.Create(req))
+	res, err := c.mixinService.Create(req)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // @Summary		重命名文件或目录
@@ -125,7 +143,13 @@ func (c *MixinController) Create(ctx *gin.Context) {
 func (c *MixinController) Rename(ctx *gin.Context) {
 	req := mixin.RenameCaseReq{}
 
-	ctx.JSON(http.StatusOK, c.mixinService.Rename(req))
+	res, err := c.mixinService.Rename(req)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // @Summary		移动文件或目录
@@ -140,7 +164,13 @@ func (c *MixinController) Rename(ctx *gin.Context) {
 func (c *MixinController) Move(ctx *gin.Context) {
 	req := mixin.MoveCaseReq{}
 
-	ctx.JSON(http.StatusOK, c.mixinService.Move(req))
+	res, err := c.mixinService.Move(req)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // @Summary		移除文件或目录
@@ -155,5 +185,11 @@ func (c *MixinController) Move(ctx *gin.Context) {
 func (c *MixinController) Delete(ctx *gin.Context) {
 	req := mixin.DeleteCaseReq{}
 
-	ctx.JSON(http.StatusOK, c.mixinService.Delete(req))
+	res, err := c.mixinService.Delete(req)
+	if err != nil {
+		woosh.HandleException(err.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }

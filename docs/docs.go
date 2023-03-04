@@ -360,7 +360,24 @@ const docTemplate = `{
     },
     "definitions": {
         "mixin.CreateCaseRes": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "IsDir": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
+                "directoryId": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "新建目录"
+                }
+            }
         },
         "mixin.DeleteCaseRes": {
             "type": "object"
@@ -413,15 +430,15 @@ const docTemplate = `{
         "mixin.GetInfoCaseRes": {
             "type": "object",
             "properties": {
+                "IsDir": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
                 "id": {
                     "type": "integer",
                     "format": "uint64",
                     "example": 1
-                },
-                "isDirectory": {
-                    "type": "boolean",
-                    "format": "bool",
-                    "example": true
                 },
                 "name": {
                     "type": "string",
@@ -434,7 +451,24 @@ const docTemplate = `{
             "type": "object"
         },
         "mixin.RenameCaseRes": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int",
+                    "example": 1
+                },
+                "isDir": {
+                    "type": "boolean",
+                    "format": "bool",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "a new dir"
+                }
+            }
         },
         "woosh.ProblemDetails": {
             "type": "object",

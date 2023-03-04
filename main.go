@@ -26,12 +26,14 @@ func main() {
 	}
 
 	// 从环境变量中获取数据库配置
-	host := os.Getenv("DB_HOST")
-	user := os.Getenv("DB_USER")
-	pwd := os.Getenv("DB_PASSWORD")
-	db := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
-	tablePrefix := os.Getenv("DB_TABLE_PREFIX")
+	var (
+		host        = os.Getenv("DB_HOST")
+		user        = os.Getenv("DB_USER")
+		pwd         = os.Getenv("DB_PASSWORD")
+		db          = os.Getenv("DB_NAME")
+		port        = os.Getenv("DB_PORT")
+		tablePrefix = os.Getenv("DB_TABLE_PREFIX")
+	)
 
 	// 初始化数据库上下文
 	dbContext, err := postgres.NewDbContext(host, user, pwd, db, tablePrefix, port)
@@ -48,19 +50,23 @@ func main() {
 		panic(err)
 	}
 
-	// 初始化仓储服务
-	directoryRepository := postgres.NewDirectoryRepository(dbContext)
-	fileRepository := postgres.NewFileRepository(dbContext)
+	var (
+		// 初始化仓储服务
+		directoryRepository = postgres.NewDirectoryRepository(dbContext)
+		fileRepository      = postgres.NewFileRepository(dbContext)
+		manifestRepository  = postgres.NewManifestRepository(dbContext)
 
-	// 初始化领域服务
-	directoryService := ds.NewDirectoryService(directoryRepository)
-	fileService := fs.NewFileService(fileRepository)
+		// 初始化领域服务
+		directoryService = ds.NewDirectoryService(directoryRepository)
+		fileService      = fs.NewFileService(fileRepository)
+		manifestService  = fs.NewManifestService(manifestRepository, fileRepository)
 
-	// 初始化应用层服务
-	mixinService := appSvc.NewMixinService(fileService, directoryService)
+		// 初始化应用层服务
+		mixinService = appSvc.NewMixinService(fileService, manifestService, directoryService)
 
-	// 初始化控制器
-	mixin := controller.NewMixinController(mixinService)
+		// 初始化控制器
+		mixin = controller.NewMixinController(mixinService)
+	)
 
 	// 初始化服务器
 	server := gin.Default()

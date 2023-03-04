@@ -1,5 +1,18 @@
 definitions:
   mixin.CreateCaseRes:
+    properties:
+      IsDir:
+        example: true
+        format: bool
+        type: boolean
+      directoryId:
+        example: 1
+        format: int
+        type: integer
+      name:
+        example: 新建目录
+        format: string
+        type: string
     type: object
   mixin.DeleteCaseRes:
     type: object
@@ -39,14 +52,14 @@ definitions:
     type: object
   mixin.GetInfoCaseRes:
     properties:
+      IsDir:
+        example: true
+        format: bool
+        type: boolean
       id:
         example: 1
         format: uint64
         type: integer
-      isDirectory:
-        example: true
-        format: bool
-        type: boolean
       name:
         example: a new dir
         format: string
@@ -55,6 +68,19 @@ definitions:
   mixin.MoveCaseRes:
     type: object
   mixin.RenameCaseRes:
+    properties:
+      id:
+        example: 1
+        format: int
+        type: integer
+      isDir:
+        example: true
+        format: bool
+        type: boolean
+      name:
+        example: a new dir
+        format: string
+        type: string
     type: object
   woosh.ProblemDetails:
     properties:

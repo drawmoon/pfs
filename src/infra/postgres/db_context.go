@@ -24,7 +24,7 @@ func NewDbContext(host, user, pwd, db, tablePrefix, port string) (*gorm.DB, erro
 }
 
 func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(&dm.Directory{}, &fm.File{})
+	return db.AutoMigrate(&dm.Directory{}, &fm.File{}, &fm.Manifest{})
 }
 
 func Close(db *gorm.DB) error {

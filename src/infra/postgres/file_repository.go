@@ -69,15 +69,6 @@ func (repo *FileRepository) Update(file model.File) (model.File, error) {
 }
 
 func (repo *FileRepository) Delete(file model.File) (model.File, error) {
-	err := repo.db.Delete(&file).Error
-	if err != nil {
-		return model.File{}, err
-	}
-
-	return file, nil
-}
-
-func (repo *FileRepository) SoftDelete(file model.File) (model.File, error) {
 	file.DataState = 1
 	err := repo.db.Save(&file).Error
 	if err != nil {

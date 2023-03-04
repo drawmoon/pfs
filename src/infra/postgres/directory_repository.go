@@ -65,15 +65,6 @@ func (repo *DirectoryRepository) Update(directory model.Directory) (model.Direct
 }
 
 func (repo *DirectoryRepository) Delete(directory model.Directory) (model.Directory, error) {
-	err := repo.db.Delete(&directory).Error
-	if err != nil {
-		return model.Directory{}, err
-	}
-
-	return directory, nil
-}
-
-func (repo *DirectoryRepository) SoftDelete(directory model.Directory) (model.Directory, error) {
 	directory.DataState = 1
 	err := repo.db.Save(&directory).Error
 	if err != nil {
