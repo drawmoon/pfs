@@ -1,10 +1,10 @@
 package mixin
 
-import "github.com/PowerReport/pfs/src/util/identity"
+import "github.com/PowerReport/pfs/src/util/id"
 
 type RenameCaseReq struct {
-	Id   identity.OpId `json:"id" example:"1" format:"int"`
-	Name string        `json:"name" example:"新的目录名称" format:"string"`
+	Id   id.OpId `json:"id" example:"1" format:"int"`
+	Name string  `json:"name" example:"新的目录名称" format:"string"`
 }
 
 type RenameCaseRes struct {

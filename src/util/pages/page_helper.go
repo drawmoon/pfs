@@ -1,4 +1,4 @@
-package dbaccessor
+package pages
 
 import "gorm.io/gorm"
 

@@ -1,9 +1,9 @@
 package mixin
 
-import "github.com/PowerReport/pfs/src/util/identity"
+import "github.com/PowerReport/pfs/src/util/id"
 
 type DeleteCaseReq struct {
-	Id identity.OpId `json:"id" example:"1" format:"int"`
+	Id id.OpId `json:"id" example:"1" format:"int"`
 }
 
 type DeleteCaseRes struct {

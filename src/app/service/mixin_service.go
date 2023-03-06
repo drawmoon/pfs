@@ -6,18 +6,18 @@ import (
 	"github.com/PowerReport/pfs/src/app/usecases/mixin"
 	ds "github.com/PowerReport/pfs/src/domain/directory/service"
 	fs "github.com/PowerReport/pfs/src/domain/file/service"
-	"github.com/PowerReport/pfs/src/util/identity"
+	"github.com/PowerReport/pfs/src/util/id"
 	"github.com/jinzhu/copier"
 )
 
 // 混合服务（不区分目录或文件的管理服务）
 type IMixinService interface {
 	// 获取目录或文件的详细信息
-	GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error)
+	GetInfo(id id.OpId) (mixin.GetInfoCaseRes, error)
 	// 获取指定目录下的目录列表
-	GetDirectories(id identity.OpId, search string, page int64, pageSize int64) (mixin.GetDirectoriesCaseRes, error)
+	GetDirectories(id id.OpId, search string, page int64, pageSize int64) (mixin.GetDirectoriesCaseRes, error)
 	// 获取指定目录下的文件列表
-	GetFiles(id identity.OpId, search string, page int64, pageSize int64) (mixin.GetFilesCaseRes, error)
+	GetFiles(id id.OpId, search string, page int64, pageSize int64) (mixin.GetFilesCaseRes, error)
 	// 创建目录或文件
 	Create(req mixin.CreateCaseReq) (mixin.CreateCaseRes, error)
 	// 重命名目录或文件
@@ -43,7 +43,7 @@ func NewMixinService(
 	}
 }
 
-func (svc *MixinService) GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error) {
+func (svc *MixinService) GetInfo(id id.OpId) (mixin.GetInfoCaseRes, error) {
 	// 如果是获取目录信息
 	if id.IsDir {
 		directory, err := svc.directoryService.GetInfo(id.Real)
@@ -67,7 +67,7 @@ func (svc *MixinService) GetInfo(id identity.OpId) (mixin.GetInfoCaseRes, error)
 }
 
 func (svc *MixinService) GetDirectories(
-	id identity.OpId, search string, page int64, pageSize int64) (mixin.GetDirectoriesCaseRes, error) {
+	id id.OpId, search string, page int64, pageSize int64) (mixin.GetDirectoriesCaseRes, error) {
 	if !id.IsDir {
 		return mixin.GetDirectoriesCaseRes{}, errors.New("无法获取子级目录列表，因为指定的不是目录")
 	}
@@ -93,9 +93,9 @@ func (svc *MixinService) GetDirectories(
 }
 
 func (svc *MixinService) GetFiles(
-	id identity.OpId, search string, page int64, pageSize int64) (mixin.GetFilesCaseRes, error) {
+	id id.OpId, search string, page int64, pageSize int64) (mixin.GetFilesCaseRes, error) {
 	if !id.IsDir {
-		return mixin.GetFilesCaseRes{}, errors.New("无法获取子级目录列表，因为指定的不是目录")
+		return mixin.GetFilesCaseRes{}, errors.New("无法获取子级文件列表，因为指定的不是目录")
 	}
 
 	files, err := svc.fileService.GetByDirectoryId(id.Real, search, page, pageSize)

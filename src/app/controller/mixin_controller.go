@@ -6,7 +6,7 @@ import (
 
 	"github.com/PowerReport/pfs/src/app/service"
 	"github.com/PowerReport/pfs/src/app/usecases/mixin"
-	"github.com/PowerReport/pfs/src/util/identity"
+	"github.com/PowerReport/pfs/src/util/id"
 	"github.com/PowerReport/pfs/src/util/woosh"
 	"github.com/gin-gonic/gin"
 )
@@ -30,7 +30,7 @@ func NewMixinController(mixinService service.IMixinService) *MixinController {
 // @Failure		500		{object}		woosh.ProblemDetails
 // @Router		/api/fs/{id}		[get]
 func (c *MixinController) GetInfo(ctx *gin.Context) {
-	id, err := identity.ParseOpId(ctx.Param("id"))
+	id, err := id.ParseOpId(ctx.Param("id"))
 	if err != nil {
 		woosh.HandleException("操作id错误", ctx)
 		return
@@ -58,7 +58,7 @@ func (c *MixinController) GetInfo(ctx *gin.Context) {
 // @Failure		500			{object}	woosh.ProblemDetails
 // @Router		/api/fs/{id}/directories		[get]
 func (c *MixinController) GetDirectories(ctx *gin.Context) {
-	id, err := identity.ParseOpId(ctx.Param("id"))
+	id, err := id.ParseOpId(ctx.Param("id"))
 	if err != nil || !id.IsDir {
 		woosh.HandleException("操作id错误", ctx)
 		return
@@ -91,7 +91,7 @@ func (c *MixinController) GetDirectories(ctx *gin.Context) {
 // @Failure		500			{object}	woosh.ProblemDetails
 // @Router		/api/fs/{id}/files		[get]
 func (c *MixinController) GetFiles(ctx *gin.Context) {
-	id, err := identity.ParseOpId(ctx.Param("id"))
+	id, err := id.ParseOpId(ctx.Param("id"))
 	if err != nil || !id.IsDir {
 		woosh.HandleException("操作id错误", ctx)
 		return

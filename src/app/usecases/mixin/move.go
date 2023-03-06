@@ -1,10 +1,10 @@
 package mixin
 
-import "github.com/PowerReport/pfs/src/util/identity"
+import "github.com/PowerReport/pfs/src/util/id"
 
 type MoveCaseReq struct {
-	Id          identity.OpId `json:"id" example:"1" format:"int"`
-	DirectoryId uint64        `json:"directoryId" example:"1" format:"int"`
+	Id          id.OpId `json:"id" example:"1" format:"int"`
+	DirectoryId uint64  `json:"directoryId" example:"1" format:"int"`
 }
 
 type MoveCaseRes struct {

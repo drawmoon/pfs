@@ -4,7 +4,7 @@ import (
 	"github.com/PowerReport/pfs/src/domain/directory/model"
 	"github.com/PowerReport/pfs/src/domain/directory/repository"
 	"github.com/PowerReport/pfs/src/domain/directory/validator"
-	"github.com/PowerReport/pfs/src/util/dbaccessor"
+	"github.com/PowerReport/pfs/src/util/pages"
 	"github.com/PowerReport/pfs/src/util/user"
 	"gorm.io/gorm"
 )
@@ -62,7 +62,7 @@ func (svc *DirectoryService) GetChildren(
 	}
 
 	// 设置分页
-	db.Scopes(dbaccessor.Paginate(int(page), int(pageSize)))
+	db.Scopes(pages.Paginate(int(page), int(pageSize)))
 
 	directories := []model.Directory{}
 	err = db.Where("DirectoryId = ? AND Name LIKE %?%", id, search).Find(&directories).Error

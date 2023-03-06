@@ -4,7 +4,7 @@ import (
 	"github.com/PowerReport/pfs/src/domain/file/model"
 	"github.com/PowerReport/pfs/src/domain/file/repository"
 	"github.com/PowerReport/pfs/src/domain/file/validator"
-	"github.com/PowerReport/pfs/src/util/dbaccessor"
+	"github.com/PowerReport/pfs/src/util/pages"
 	"github.com/PowerReport/pfs/src/util/user"
 	"gorm.io/gorm"
 )
@@ -62,7 +62,7 @@ func (svc *FileService) GetByDirectoryId(
 	}
 
 	// 设置分页
-	db.Scopes(dbaccessor.Paginate(int(page), int(pageSize)))
+	db.Scopes(pages.Paginate(int(page), int(pageSize)))
 
 	files := []model.File{}
 	err = db.Where("DirectoryId = ? AND Name LIKE %?%", directoryId, search).Find(&files).Error
