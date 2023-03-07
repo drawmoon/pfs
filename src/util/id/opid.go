@@ -1,9 +1,9 @@
 package id
 
 import (
+	"errors"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 // 目录或文件的操作标识
@@ -20,7 +20,15 @@ const (
 
 // 解析操作标识
 func ParseOpId(str string) (OpId, error) {
+	// 如果是根目录
+	if str == Personal {
+		return OpId{Id: str, Real: 0, IsDir: true, IsRoot: true}, nil
+	}
+
 	pattern := regexp.MustCompile(regex)
+	if !pattern.MatchString(str) {
+		return OpId{}, errors.New("不支持的表达式")
+	}
 
 	g := pattern.FindStringSubmatch(str)
 	t := g[1]
@@ -36,18 +44,13 @@ func ParseOpId(str string) (OpId, error) {
 }
 
 // 解析操作标识
-func ParseOpIds(str string) ([]OpId, error) {
-	if !strings.Contains(",", str) {
-		return []OpId{}, nil
-	}
-
+func ParseOpIds(ss []string) ([]OpId, error) {
 	var opIds []OpId
 
-	ss := strings.Split(str, ",")
 	for _, v := range ss {
 		opId, err := ParseOpId(v)
 		if err != nil {
-			return []OpId{}, nil
+			return nil, err
 		}
 
 		opIds = append(opIds, opId)

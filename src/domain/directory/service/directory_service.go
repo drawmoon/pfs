@@ -1,6 +1,9 @@
 package service
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/PowerReport/pfs/src/domain/directory/model"
 	"github.com/PowerReport/pfs/src/domain/directory/repository"
 	"github.com/PowerReport/pfs/src/domain/directory/validator"
@@ -64,8 +67,14 @@ func (svc *DirectoryService) GetChildren(
 	// 设置分页
 	db.Scopes(pages.Paginate(int(page), int(pageSize)))
 
+	// 查询
+	if strings.TrimSpace(search) != "" {
+		db.Where("DirectoryId = ? AND Name LIKE ?", id, fmt.Sprintf("%%%s%%", search))
+	} else {
+		db.Where(&model.Directory{DirectoryId: id})
+	}
 	directories := []model.Directory{}
-	err = db.Where("DirectoryId = ? AND Name LIKE %?%", id, search).Find(&directories).Error
+	err = db.Find(&directories).Error
 	if err != nil {
 		return []model.Directory{}, err
 	}

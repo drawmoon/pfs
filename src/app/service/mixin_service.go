@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/PowerReport/pfs/src/app/usecases/mixin"
+	dm "github.com/PowerReport/pfs/src/domain/directory/model"
 	ds "github.com/PowerReport/pfs/src/domain/directory/service"
 	fs "github.com/PowerReport/pfs/src/domain/file/service"
 	"github.com/PowerReport/pfs/src/util/id"
@@ -72,7 +73,17 @@ func (svc *MixinService) GetDirectories(
 		return mixin.GetDirectoriesCaseRes{}, errors.New("无法获取子级目录列表，因为指定的不是目录")
 	}
 
-	directories, err := svc.directoryService.GetChildren(id.Real, search, page, pageSize)
+	var (
+		directories []dm.Directory
+		err         error
+	)
+
+	// 如果是获取根目录
+	if id.IsRoot {
+		directories, err = svc.directoryService.GetRootDirectories()
+	} else {
+		directories, err = svc.directoryService.GetChildren(id.Real, search, page, pageSize)
+	}
 	if err != nil {
 		return mixin.GetDirectoriesCaseRes{}, err
 	}
@@ -80,14 +91,20 @@ func (svc *MixinService) GetDirectories(
 	dirRes := []mixin.GetDirectoryCaseRes{}
 	copier.Copy(&dirRes, &directories)
 
+	var (
+		totalCount   = int64(0)
+		totalPages   = totalCount / pageSize
+		hasPrevPages = page < totalPages
+		hasNextPages = page-1 > 0
+	)
 	res := mixin.GetDirectoriesCaseRes{
 		PageIndex:    page,
 		PageSize:     pageSize,
-		TotalCount:   0,
-		TotalPages:   0,
+		TotalCount:   totalCount,
+		TotalPages:   totalPages,
 		Items:        dirRes,
-		HasPrevPages: true,
-		HasNextPages: true,
+		HasPrevPages: hasPrevPages,
+		HasNextPages: hasNextPages,
 	}
 	return res, nil
 }
@@ -106,14 +123,20 @@ func (svc *MixinService) GetFiles(
 	fileRes := []mixin.GetFileCaseRes{}
 	copier.Copy(&fileRes, &files)
 
+	var (
+		totalCount   = int64(0)
+		totalPages   = totalCount / pageSize
+		hasPrevPages = page < totalPages
+		hasNextPages = page-1 > 0
+	)
 	res := mixin.GetFilesCaseRes{
 		PageIndex:    page,
 		PageSize:     pageSize,
-		TotalCount:   0,
-		TotalPages:   0,
+		TotalCount:   totalCount,
+		TotalPages:   totalPages,
 		Items:        fileRes,
-		HasPrevPages: true,
-		HasNextPages: true,
+		HasPrevPages: hasPrevPages,
+		HasNextPages: hasNextPages,
 	}
 	return res, nil
 }

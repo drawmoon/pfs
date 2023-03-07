@@ -1,6 +1,9 @@
 package service
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/PowerReport/pfs/src/domain/file/model"
 	"github.com/PowerReport/pfs/src/domain/file/repository"
 	"github.com/PowerReport/pfs/src/domain/file/validator"
@@ -64,8 +67,15 @@ func (svc *FileService) GetByDirectoryId(
 	// 设置分页
 	db.Scopes(pages.Paginate(int(page), int(pageSize)))
 
+	// 查询
+	if strings.TrimSpace(search) != "" {
+		db.Where("DirectoryId = ? AND Name LIKE ?", directoryId, fmt.Sprintf("%%%s%%", search))
+	} else {
+		db.Where(&model.File{DirectoryId: directoryId})
+	}
+
 	files := []model.File{}
-	err = db.Where("DirectoryId = ? AND Name LIKE %?%", directoryId, search).Find(&files).Error
+	err = db.Find(&files).Error
 	if err != nil {
 		return []model.File{}, err
 	}
